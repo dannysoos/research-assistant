@@ -35,15 +35,23 @@ def create_research_assistant():
             vector_store_ids=[vector_store_id],
         ))
     
-    return Agent(
-        name="Research Assistant",
-        instructions="""You are a research assistant who searches the web and responds to questions based on the documents provided to you. 
+    # Read instructions from prompt.txt file
+    try:
+        with open('prompt.txt', 'r') as f:
+            instructions = f.read().strip()
+    except FileNotFoundError:
+        # Fallback instructions if prompt.txt is not found
+        instructions = """You are a research assistant who searches the web and responds to questions based on the documents provided to you. 
         
         Always cite your sources when responding to questions. Maintain the conversation context and refer to previous exchanges when appropriate.
         If you don't have enough information to answer a question, say so and suggest what additional information might help.
         
         Format your responses in a clear, readable manner using markdown formatting when appropriate.
-        """,
+        """
+    
+    return Agent(
+        name="Research Assistant",
+        instructions=instructions,
         tools=tools,
     )
 
